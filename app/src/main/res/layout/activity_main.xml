@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/rootLayout"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/explorerImg"
+        android:layout_width="96dp"
+        android:layout_height="106dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/explorere"
+
+        />
+
+    <ImageView
+        android:id="@+id/chromeImg"
+        android:layout_width="96dp"
+        android:layout_height="106dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/chrome"
+        android:layout_below="@id/explorerImg"
+
+
+
+        />
+
+    <ImageView
+        android:id="@+id/edgeImg"
+        android:layout_width="96dp"
+        android:layout_height="106dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/edge"
+        android:layout_below="@id/chromeImg"
+        android:visibility="gone"
+
+        />
+    <ImageView
+        android:id="@+id/fireFoxImg"
+        android:layout_width="96dp"
+        android:layout_height="106dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/firefox"
+        android:layout_below="@id/edgeImg"
+        android:visibility="gone"
+
+        />
+
+    <ImageView
+        android:id="@+id/braveImg"
+        android:layout_width="96dp"
+        android:layout_height="106dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/brave"
+        android:layout_below="@id/fireFoxImg"
+        android:visibility="gone"
+
+        />
+
+    <TextView
+        android:id="@+id/hitDetect"
+        android:layout_width="96dp"
+        android:layout_height="106dp"
+        android:layout_above="@id/chromeImg"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="0dp"
+        android:text="No Hit"
+        ></TextView>
+
+    <TextView
+        android:id="@+id/scoreText"
+        android:layout_width="96dp"
+        android:layout_height="106dp"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="0dp"
+
+        android:textSize="50dp"
+        ></TextView>
+</RelativeLayout>

@@ -20,7 +20,7 @@ android:id="@+id/rootLayout"
         android:layout_height="106dp"
         android:layout_centerInParent="true"
         android:src="@drawable/chrome"
-        android:layout_below="@id/explorerImg"
+
 
 
 
@@ -30,9 +30,9 @@ android:id="@+id/rootLayout"
         android:id="@+id/edgeImg"
         android:layout_width="96dp"
         android:layout_height="106dp"
-        android:layout_centerInParent="true"
+
         android:src="@drawable/edge"
-        android:layout_below="@id/chromeImg"
+
         android:visibility="gone"
 
         />
@@ -40,9 +40,9 @@ android:id="@+id/rootLayout"
         android:id="@+id/fireFoxImg"
         android:layout_width="96dp"
         android:layout_height="106dp"
-        android:layout_centerInParent="true"
+
         android:src="@drawable/firefox"
-        android:layout_below="@id/edgeImg"
+
         android:visibility="gone"
 
         />
@@ -51,9 +51,9 @@ android:id="@+id/rootLayout"
         android:id="@+id/braveImg"
         android:layout_width="96dp"
         android:layout_height="106dp"
-        android:layout_centerInParent="true"
+
         android:src="@drawable/brave"
-        android:layout_below="@id/fireFoxImg"
+
         android:visibility="gone"
 
         />
@@ -62,17 +62,30 @@ android:id="@+id/rootLayout"
         android:id="@+id/hitDetect"
         android:layout_width="96dp"
         android:layout_height="106dp"
-        android:layout_above="@id/chromeImg"
-        android:layout_centerVertical="true"
+
+
         android:layout_marginBottom="0dp"
         android:text="No Hit"
         ></TextView>
 
+
     <TextView
+        android:id="@+id/lifeDetect"
+        android:layout_width="96dp"
+        android:layout_height="106dp"
+
+        android:layout_below="@id/hitDetect"
+        android:layout_marginBottom="0dp"
+        android:text="3"
+        ></TextView>
+
+
+    <TextView
+
         android:id="@+id/scoreText"
         android:layout_width="96dp"
         android:layout_height="106dp"
-        android:layout_centerInParent="true"
+
         android:layout_marginBottom="0dp"
 
         android:textSize="50dp"

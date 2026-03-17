@@ -39,7 +39,9 @@ public class MainActivity extends AppCompatActivity {
         int screenHeight=2500;
         int score=0;
 
-        TextView hitDetect, scoreText;
+         int life=3;
+
+    TextView hitDetect, scoreText, lifeDetect;
 
         int level= 1;
 
@@ -61,14 +63,17 @@ public class MainActivity extends AppCompatActivity {
 
 
         hitDetect=findViewById(R.id.hitDetect);
+        lifeDetect=findViewById(R.id.lifeDetect);
         scoreText=findViewById(R.id.scoreText);
         ImageView[] browsers={chrome, edge, fireFox, brave};
 
         hitDetect.setText("1");
+        lifeDetect.setText("3");
 
         for(int i = 0; i < level; i++){
-            launchBrowser(browsers[i]);
-
+            if(browsers[i].getVisibility() == VISIBLE){
+                updateBrowser(browsers[i]);
+            }
         }
         edge.setVisibility(GONE);
 
@@ -121,8 +126,14 @@ public class MainActivity extends AppCompatActivity {
         if(browser == fireFox) fireFoxVel= velocity;
         if(browser == brave) braveVel = velocity;
 
-        if(browser.getY() > screenHeight){
+        if(browser.getY() > screenHeight+1000){
             launchBrowser(browser);
+            life--;
+            lifeDetect.setText(String.valueOf(life));
+
+            if(life <=0){
+                gameStop();
+            }
         }
 
     }
@@ -250,44 +261,45 @@ public class MainActivity extends AppCompatActivity {
 
     void checkSlash(View fruit, float x, float y){
 
+        if(fruit.getVisibility() != VISIBLE) return;
+
         Rect r = new Rect();
         fruit.getHitRect(r);
 
-
         if(r.contains((int)x,(int)y)){
 
-            if(!touch) {
-                score++;
-                scoreText.setText(String.valueOf(score));
-                fruit.setVisibility(GONE);
-                touch=true;
-                if(score == 5){
-                    level=2;
-                    hitDetect.setText(String.valueOf(level));
-                }else if (score ==7){
-                    level=3;
-                    hitDetect.setText(String.valueOf(level));
-                }
-                else if (score ==10){
-                    level=4;
-                    hitDetect.setText(String.valueOf(level));
-                }
+            score++;
+            scoreText.setText(String.valueOf(score));
+            fruit.setVisibility(GONE);
 
-
+            if(score == 5){
+                level=2;
+                hitDetect.setText(String.valueOf(level));
+            } else if (score ==7){
+                level=3;
+                hitDetect.setText(String.valueOf(level));
+            } else if (score ==10){
+                level=4;
+                hitDetect.setText(String.valueOf(level));
             }
 
-            touch=false;
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if(fruit == chrome) launchBrowser(chrome);
-                    if(fruit == edge) launchBrowser(edge);
-                    if(fruit == fireFox) launchBrowser(fireFox);
-                    if(fruit == brave) launchBrowser(brave);
-                }
-            },delayed1);
-
+            handler.postDelayed(() -> {
+                launchBrowser((ImageView) fruit);
+            }, delayed1);
         }
     }
 
+
+    void gameStop(){
+
+        gravity=0;
+        chromeVel=0;
+        edgeVel=0;
+        fireFoxVel=0;
+        braveVel=0;
+
+
+
+
+    }
 }

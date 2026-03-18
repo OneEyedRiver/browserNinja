@@ -4,6 +4,7 @@ import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
+import android.database.Cursor;
 import android.graphics.Rect;
 import android.media.Image;
 import android.os.Bundle;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         SlashView slashView;
 
-        Button btnEnter, btnPlay;
+        Button btnEnter, btnPlay, btnResult;
         EditText edtName;
 
 
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
          int life=3;
 
-    TextView hitDetect, scoreText, lifeDetect;
+    TextView hitDetect, scoreText, lifeDetect, txtResult;
 
         int level= 5;
 
@@ -70,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
         btnEnter=findViewById(R.id.btnEnter);
         edtName=findViewById(R.id.edtName);
         btnPlay=findViewById(R.id.btnPlay);
+        btnResult=findViewById(R.id.btnResult);
+        txtResult=findViewById(R.id.txtResult);
 
 
         slashView=findViewById(R.id.slashView);
@@ -99,9 +102,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 btnPlay.setVisibility(INVISIBLE);
+                btnResult.setVisibility(GONE);
+                txtResult.setVisibility(GONE);
                 startGame();
-
                 clicker();
+            }
+        });
+
+        btnResult.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getRank();
             }
         });
 
@@ -407,6 +418,22 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    void getRank(){
+        Cursor cursor= db.getAllData();
+        StringBuffer buffer=new StringBuffer();
+
+        while(cursor.moveToNext()){
+            StringBuffer name = buffer.append("Id: ").
+                    append(cursor.getString(0)).
+                    append(" Name: ").
+                    append(cursor.getString(1)).
+                    append(" Score: ").
+                    append(cursor.getString(2)).
+                    append("\n");
+        }
+
+        txtResult.setText(buffer.toString());
+    }
 
 
 }

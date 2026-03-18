@@ -108,11 +108,11 @@ android:id="@+id/rootLayout"
         android:layout_width="300dp"
         android:layout_height="106dp"
 
-        android:layout_marginBottom="0dp"
+
     android:hint="Enter Name"
         android:textSize="50dp"
         android:layout_centerInParent="true"
-        android:visibility="invisible"
+        android:visibility="gone"
         ></EditText>
 
     <Button
@@ -123,25 +123,41 @@ android:id="@+id/rootLayout"
         android:text="Enter"
         android:layout_centerInParent="true"
        android:textSize="50dp"
-        android:visibility="invisible"
+        android:visibility="gone"
         />
+
     <Button
         android:id="@+id/btnPlay"
         android:layout_width="300dp"
-        android:layout_height="106dp"
+        android:layout_height="75dp"
         android:layout_below="@id/edtName"
         android:text="Play"
         android:layout_centerInParent="true"
         android:textSize="50dp"
 
-        />
+        /><Button
+    android:id="@+id/btnResult"
+    android:layout_width="300dp"
+    android:layout_height="75dp"
+    android:layout_below="@id/btnPlay"
+    android:text="Rank"
+    android:layout_centerInParent="true"
+    android:textSize="30dp"
 
+
+    />
+    <TextView
+        android:id="@+id/txtResult"
+        android:layout_width="300dp"
+        android:layout_height="106dp"
+        android:layout_below="@id/btnResult"
+        android:layout_centerInParent="true"
+        ></TextView>
 
     <com.example.gameact.SlashView
         android:id="@+id/slashView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent" />
 
 
 </RelativeLayout>

@@ -22,19 +22,20 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-        ImageView chrome, edge, fireFox, brave, explorer;
+        ImageView chrome, edge, fireFox, brave, explorer, virus;
 
         Handler handler= new Handler();
         Random random= new Random();
 
         int delayed=400;
 
+        SlashView slashView;
 
 
     int delayed1=1000;
 
         float initialX, initialY, offSetX, offSetY;
-        float chromeVel, edgeVel, fireFoxVel, braveVel;
+        float chromeVel, edgeVel, fireFoxVel, braveVel, virusVel;
         float gravity= 0.5f;
         int screenHeight=2500;
         int score=0;
@@ -43,9 +44,10 @@ public class MainActivity extends AppCompatActivity {
 
     TextView hitDetect, scoreText, lifeDetect;
 
-        int level= 1;
+        int level= 5;
 
         boolean touch= false;
+        boolean over=false;
 
 
 
@@ -54,18 +56,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-
+        slashView=findViewById(R.id.slashView);
         chrome=findViewById(R.id.chromeImg);
         edge=findViewById(R.id.edgeImg);
         fireFox=findViewById(R.id.fireFoxImg);
         brave=findViewById(R.id.braveImg);
         explorer=findViewById(R.id.explorerImg);
+        virus=findViewById(R.id.virusImg);
 
 
         hitDetect=findViewById(R.id.hitDetect);
         lifeDetect=findViewById(R.id.lifeDetect);
         scoreText=findViewById(R.id.scoreText);
-        ImageView[] browsers={chrome, edge, fireFox, brave};
+        ImageView[] browsers={chrome, edge, fireFox, brave, virus};
 
         hitDetect.setText("1");
         lifeDetect.setText("3");
@@ -107,16 +110,24 @@ public class MainActivity extends AppCompatActivity {
             braveVel = startingVelocity;
             brave.setVisibility(VISIBLE);
         }
+        if(browser == virus) {
+            virusVel = startingVelocity;
+            virus.setVisibility(VISIBLE);
+        }
 
     }
 
     void updateBrowser(ImageView browser){
+
+        if(over)  return;
+
         float velocity= 0f;
 
         if(browser == chrome) velocity = chromeVel;
         if(browser == edge) velocity = edgeVel;
         if(browser == fireFox) velocity = fireFoxVel;
         if(browser == brave) velocity = braveVel;
+        if(browser == virus) velocity = virusVel;
 
         browser.setY(browser.getY() + velocity);
 
@@ -125,14 +136,24 @@ public class MainActivity extends AppCompatActivity {
         if(browser == edge) edgeVel = velocity;
         if(browser == fireFox) fireFoxVel= velocity;
         if(browser == brave) braveVel = velocity;
+        if(browser == virus) virusVel = velocity;
 
-        if(browser.getY() > screenHeight+1000){
-            launchBrowser(browser);
-            life--;
+
+
+        if(browser.getY() > screenHeight){
+            browser.setVisibility(GONE);
+
+            if(browser !=virus) life--;
+
+
             lifeDetect.setText(String.valueOf(life));
 
+            handler.postDelayed(() -> {
+             launchBrowser((ImageView) browser);
+            }, delayed1);
+
             if(life <=0){
-                gameStop();
+                over=true;
             }
         }
 
@@ -142,10 +163,12 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                ImageView[] browsers={chrome, edge, fireFox, brave};
+                ImageView[] browsers={chrome, edge, fireFox, brave, virus};
 
                 for(int i = 0; i < level; i++){
-                    updateBrowser(browsers[i]);
+                    if(browsers[i].getVisibility() == VISIBLE){
+                        updateBrowser(browsers[i]);
+                    }
                 }
 
                 handler.postDelayed(this, 30);
@@ -240,13 +263,25 @@ public class MainActivity extends AppCompatActivity {
                 float x = event.getX();
                 float y = event.getY();
 
-                if(event.getAction() == MotionEvent.ACTION_MOVE){
+                switch (event.getAction()) {
 
-                    checkSlash(chrome, x, y);
-                    checkSlash(edge, x, y);
-                    checkSlash(fireFox, x, y);
-                    checkSlash(brave, x, y);
+                    case MotionEvent.ACTION_DOWN:
+                        slashView.start(x, y);
+                        break;
 
+                    case MotionEvent.ACTION_MOVE:
+                        slashView.addPoint(x, y);
+
+                        checkSlash(chrome, x, y);
+                        checkSlash(edge, x, y);
+                        checkSlash(fireFox, x, y);
+                        checkSlash(brave, x, y);
+                        checkSlash(virus, x, y);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        slashView.clear(); // 👈 ADD THIS
+                        break;
                 }
 
                 return true;
@@ -268,21 +303,42 @@ public class MainActivity extends AppCompatActivity {
 
         if(r.contains((int)x,(int)y)){
 
-            score++;
+            if(fruit != virus) {
+                score++;
+
+            }else{
+
+                life--;
+                lifeDetect.setText(String.valueOf(life));
+
+                if(life ==0){
+                    over=true;
+                }
+            }
             scoreText.setText(String.valueOf(score));
             fruit.setVisibility(GONE);
 
             if(score == 5){
-                level=2;
+                level = 2;
                 hitDetect.setText(String.valueOf(level));
-            } else if (score ==7){
-                level=3;
+                launchBrowser(edge); // ✅ ADD THIS
+            }
+            else if(score == 7){
+                level = 3;
                 hitDetect.setText(String.valueOf(level));
-            } else if (score ==10){
-                level=4;
+                launchBrowser(fireFox); // ✅ ADD THIS
+            }
+            else if(score == 10){
+                level = 4;
                 hitDetect.setText(String.valueOf(level));
+                launchBrowser(brave); // ✅ ADD THIS
             }
 
+            else if(score == 12){
+                level = 5;
+                hitDetect.setText(String.valueOf(level));
+                launchBrowser(virus); // ✅ ADD THIS
+            }
             handler.postDelayed(() -> {
                 launchBrowser((ImageView) fruit);
             }, delayed1);
@@ -297,6 +353,19 @@ public class MainActivity extends AppCompatActivity {
         edgeVel=0;
         fireFoxVel=0;
         braveVel=0;
+        virusVel=0;
+        ImageView[] browsers={chrome, edge, fireFox, brave, virus};
+
+        for(ImageView browser: browsers){
+            browser.setVisibility(GONE);
+        }
+
+        virus.setVisibility(GONE);
+
+
+
+
+
 
 
 

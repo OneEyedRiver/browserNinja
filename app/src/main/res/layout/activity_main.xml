@@ -19,7 +19,7 @@ android:id="@+id/rootLayout"
         android:id="@+id/chromeImg"
         android:layout_width="96dp"
         android:layout_height="106dp"
-        android:layout_centerInParent="true"
+
         android:src="@drawable/chrome"
 
 
@@ -102,11 +102,46 @@ android:id="@+id/rootLayout"
         android:textSize="50dp"
         ></TextView>
 
+    <EditText
+
+        android:id="@+id/edtName"
+        android:layout_width="300dp"
+        android:layout_height="106dp"
+
+        android:layout_marginBottom="0dp"
+    android:hint="Enter Name"
+        android:textSize="50dp"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"
+        ></EditText>
+
+    <Button
+        android:id="@+id/btnEnter"
+        android:layout_width="300dp"
+        android:layout_height="106dp"
+        android:layout_below="@id/edtName"
+        android:text="Enter"
+        android:layout_centerInParent="true"
+       android:textSize="50dp"
+        android:visibility="invisible"
+        />
+    <Button
+        android:id="@+id/btnPlay"
+        android:layout_width="300dp"
+        android:layout_height="106dp"
+        android:layout_below="@id/edtName"
+        android:text="Play"
+        android:layout_centerInParent="true"
+        android:textSize="50dp"
+
+        />
+
 
     <com.example.gameact.SlashView
         android:id="@+id/slashView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        />
 
 
 </RelativeLayout>

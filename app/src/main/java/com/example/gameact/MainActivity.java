@@ -1,6 +1,7 @@
 package com.example.gameact;
 
 import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
 import android.graphics.Rect;
@@ -9,8 +10,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,8 +35,12 @@ public class MainActivity extends AppCompatActivity {
 
         SlashView slashView;
 
+        Button btnEnter, btnPlay;
+        EditText edtName;
+
 
     int delayed1=1000;
+
 
         float initialX, initialY, offSetX, offSetY;
         float chromeVel, edgeVel, fireFoxVel, braveVel, virusVel;
@@ -48,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
 
         boolean touch= false;
         boolean over=false;
+        boolean play=false;
+         DatabaseHelper db;
 
 
 
@@ -56,6 +66,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+        db = new DatabaseHelper(this);
+        btnEnter=findViewById(R.id.btnEnter);
+        edtName=findViewById(R.id.edtName);
+        btnPlay=findViewById(R.id.btnPlay);
+
+
         slashView=findViewById(R.id.slashView);
         chrome=findViewById(R.id.chromeImg);
         edge=findViewById(R.id.edgeImg);
@@ -75,14 +91,41 @@ public class MainActivity extends AppCompatActivity {
 
         for(int i = 0; i < level; i++){
             if(browsers[i].getVisibility() == VISIBLE){
-                updateBrowser(browsers[i]);
+                launchBrowser(browsers[i]);
             }
         }
-        edge.setVisibility(GONE);
 
-        startGame();
+        btnPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                btnPlay.setVisibility(INVISIBLE);
+                startGame();
 
-        clicker();
+                clicker();
+            }
+        });
+
+
+
+        btnEnter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String name= edtName.getText().toString();
+                int scoreFinal= score;
+
+                boolean inserted= db.insertData(name, score);
+
+                if(inserted)
+                    Toast.makeText(MainActivity.this,"Record Saved!",Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(MainActivity.this,"Failed",Toast.LENGTH_SHORT).show();
+
+
+
+
+            }
+        });
 
     }
 
@@ -119,7 +162,12 @@ public class MainActivity extends AppCompatActivity {
 
     void updateBrowser(ImageView browser){
 
-        if(over)  return;
+        if(over)  {
+            btnEnter.setVisibility(VISIBLE);
+            edtName.setVisibility(VISIBLE);
+
+
+            return;}
 
         float velocity= 0f;
 
@@ -348,27 +396,17 @@ public class MainActivity extends AppCompatActivity {
 
     void gameStop(){
 
-        gravity=0;
-        chromeVel=0;
-        edgeVel=0;
-        fireFoxVel=0;
-        braveVel=0;
-        virusVel=0;
-        ImageView[] browsers={chrome, edge, fireFox, brave, virus};
-
-        for(ImageView browser: browsers){
-            browser.setVisibility(GONE);
-        }
-
-        virus.setVisibility(GONE);
 
 
-
-
+        btnEnter.setVisibility(VISIBLE);
+        edtName.setVisibility(VISIBLE);
 
 
 
 
 
     }
+
+
+
 }

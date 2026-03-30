@@ -101,7 +101,8 @@ public class MainActivity extends AppCompatActivity {
                 btnPlay.setVisibility(INVISIBLE);
                 startGame();
 
-                clicker();
+
+           clicker();
             }
         });
 
@@ -202,6 +203,7 @@ public class MainActivity extends AppCompatActivity {
 
             if(life <=0){
                 over=true;
+                slashView.clear();
             }
         }
 
@@ -223,70 +225,68 @@ public class MainActivity extends AppCompatActivity {
             }
         },30);
     }
-   void moveImageRandomly(ImageView pic){
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
+   void moveImageRandomly(ImageView pic) {
+       handler.postDelayed(new Runnable() {
+           @Override
+           public void run() {
 
-                int[] locX={100, 800};
-                int[] locY={50, 1600};
-                int randomX= random.nextInt(2);
-                int randomY= random.nextInt(2);
-                pic.setX(locX[randomX]);
-                pic.setY(locY[randomY]);
-
-
-
-                handler.postDelayed(this, delayed);
-
-                            }
-        },delayed);
-
-        touch(explorer);
-   }
+               int[] locX = {100, 800};
+               int[] locY = {50, 1600};
+               int randomX = random.nextInt(2);
+               int randomY = random.nextInt(2);
+               pic.setX(locX[randomX]);
+               pic.setY(locY[randomY]);
 
 
+               handler.postDelayed(this, delayed);
 
-   void touch(View move){
-        move.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
+           }
+       }, delayed);
 
-                    case MotionEvent.ACTION_DOWN:
-                        initialX= motionEvent.getRawX();
-                        initialY=motionEvent.getRawY();
-
-                        offSetX= move.getX()- initialX;
-                        offSetY= move.getY()- initialY;
-
-                        return true;
-                    case MotionEvent.ACTION_MOVE:
-                        float newX= motionEvent.getRawX() + offSetX;
-                        float newY= motionEvent.getRawY() + offSetY;
-
-                        move.setX(newX);
-                        move.setY(newY);
-
-                        if(collideCheck(move, brave)){
-                            score++;
-                            hitDetect.setText(String.valueOf(score));
-
-                            if (score>=100){
-                                scoreText.setText("GG");
-                            }
-                        }
-
-
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        return  true;
-                    default: return false;
-                }
-            }
-        });
 
    }
+//
+//   void touch(View move){
+//
+//        move.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                switch (motionEvent.getAction()) {
+//
+//                    case MotionEvent.ACTION_DOWN:
+//                        initialX= motionEvent.getRawX();
+//                        initialY=motionEvent.getRawY();
+//
+//                        offSetX= move.getX()- initialX;
+//                        offSetY= move.getY()- initialY;
+//
+//                        return true;
+//                    case MotionEvent.ACTION_MOVE:
+//                        float newX= motionEvent.getRawX() + offSetX;
+//                        float newY= motionEvent.getRawY() + offSetY;
+//
+//                        move.setX(newX);
+//                        move.setY(newY);
+//
+//                        if(collideCheck(move, brave)){
+//                            score++;
+//                            hitDetect.setText(String.valueOf(score));
+//
+//                            if (score>=100){
+//                                scoreText.setText("GG");
+//                            }
+//                        }
+//
+//
+//                        return true;
+//                    case MotionEvent.ACTION_UP:
+//                        return  true;
+//                    default: return false;
+//                }
+//            }
+//        });
+//
+//   }
 
 
    boolean collideCheck(View v1, View v2){
@@ -302,40 +302,45 @@ public class MainActivity extends AppCompatActivity {
 
     void clicker(){
 
-        View gameArea = findViewById(R.id.rootLayout);
 
-        gameArea.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
+         View gameArea = findViewById(R.id.rootLayout);
 
-                float x = event.getX();
-                float y = event.getY();
+         gameArea.setOnTouchListener(new View.OnTouchListener() {
 
-                switch (event.getAction()) {
 
-                    case MotionEvent.ACTION_DOWN:
-                        slashView.start(x, y);
-                        break;
+             @Override
+             public boolean onTouch(View v, MotionEvent event) {
+                 if (over) {
+                     slashView.clear();   // remove slash
+                     return false;        // 🚨 STOP everything
+                 }
+                 float x = event.getX();
+                 float y = event.getY();
 
-                    case MotionEvent.ACTION_MOVE:
-                        slashView.addPoint(x, y);
+                 switch (event.getAction()) {
 
-                        checkSlash(chrome, x, y);
-                        checkSlash(edge, x, y);
-                        checkSlash(fireFox, x, y);
-                        checkSlash(brave, x, y);
-                        checkSlash(virus, x, y);
-                        break;
+                     case MotionEvent.ACTION_DOWN:
+                         slashView.start(x, y);
+                         break;
 
-                    case MotionEvent.ACTION_UP:
-                        slashView.clear(); // 👈 ADD THIS
-                        break;
-                }
+                     case MotionEvent.ACTION_MOVE:
+                         slashView.addPoint(x, y);
 
-                return true;
-            }
-        });
+                         checkSlash(chrome, x, y);
+                         checkSlash(edge, x, y);
+                         checkSlash(fireFox, x, y);
+                         checkSlash(brave, x, y);
+                         checkSlash(virus, x, y);
+                         break;
 
+                     case MotionEvent.ACTION_UP:
+                         slashView.clear(); // 👈 ADD THIS
+                         break;
+                 }
+
+                 return true;
+             }
+         });
 
 
 
@@ -361,6 +366,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if(life ==0){
                     over=true;
+                    slashView.clear();
                 }
             }
             scoreText.setText(String.valueOf(score));

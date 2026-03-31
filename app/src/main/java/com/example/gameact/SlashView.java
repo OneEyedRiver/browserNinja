@@ -41,6 +41,7 @@ public class SlashView extends View {
     }
 
     public void addPoint(float x, float y) {
+
         points.add(new PointF(x, y));
 
         // 🔥 LIMIT LENGTH

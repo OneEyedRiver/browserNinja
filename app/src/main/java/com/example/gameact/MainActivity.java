@@ -1,6 +1,7 @@
 package com.example.gameact;
 
 import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
 import android.graphics.Rect;
@@ -9,8 +10,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,8 +35,12 @@ public class MainActivity extends AppCompatActivity {
 
         SlashView slashView;
 
+        Button btnEnter, btnPlay;
+        EditText edtName;
+
 
     int delayed1=1000;
+
 
         float initialX, initialY, offSetX, offSetY;
         float chromeVel, edgeVel, fireFoxVel, braveVel, virusVel;
@@ -48,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
 
         boolean touch= false;
         boolean over=false;
+        boolean play=false;
+         DatabaseHelper db;
 
 
 
@@ -56,6 +66,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+        db = new DatabaseHelper(this);
+        btnEnter=findViewById(R.id.btnEnter);
+        edtName=findViewById(R.id.edtName);
+        btnPlay=findViewById(R.id.btnPlay);
+
+
         slashView=findViewById(R.id.slashView);
         chrome=findViewById(R.id.chromeImg);
         edge=findViewById(R.id.edgeImg);
@@ -75,14 +91,42 @@ public class MainActivity extends AppCompatActivity {
 
         for(int i = 0; i < level; i++){
             if(browsers[i].getVisibility() == VISIBLE){
-                updateBrowser(browsers[i]);
+                launchBrowser(browsers[i]);
             }
         }
-        edge.setVisibility(GONE);
 
-        startGame();
+        btnPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                btnPlay.setVisibility(INVISIBLE);
+                startGame();
 
-        clicker();
+
+           clicker();
+            }
+        });
+
+
+
+        btnEnter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String name= edtName.getText().toString();
+                int scoreFinal= score;
+
+                boolean inserted= db.insertData(name, score);
+
+                if(inserted)
+                    Toast.makeText(MainActivity.this,"Record Saved!",Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(MainActivity.this,"Failed",Toast.LENGTH_SHORT).show();
+
+
+
+
+            }
+        });
 
     }
 
@@ -119,7 +163,12 @@ public class MainActivity extends AppCompatActivity {
 
     void updateBrowser(ImageView browser){
 
-        if(over)  return;
+        if(over)  {
+            btnEnter.setVisibility(VISIBLE);
+            edtName.setVisibility(VISIBLE);
+
+
+            return;}
 
         float velocity= 0f;
 
@@ -154,6 +203,7 @@ public class MainActivity extends AppCompatActivity {
 
             if(life <=0){
                 over=true;
+                slashView.clear();
             }
         }
 
@@ -175,70 +225,68 @@ public class MainActivity extends AppCompatActivity {
             }
         },30);
     }
-   void moveImageRandomly(ImageView pic){
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
+   void moveImageRandomly(ImageView pic) {
+       handler.postDelayed(new Runnable() {
+           @Override
+           public void run() {
 
-                int[] locX={100, 800};
-                int[] locY={50, 1600};
-                int randomX= random.nextInt(2);
-                int randomY= random.nextInt(2);
-                pic.setX(locX[randomX]);
-                pic.setY(locY[randomY]);
-
-
-
-                handler.postDelayed(this, delayed);
-
-                            }
-        },delayed);
-
-        touch(explorer);
-   }
+               int[] locX = {100, 800};
+               int[] locY = {50, 1600};
+               int randomX = random.nextInt(2);
+               int randomY = random.nextInt(2);
+               pic.setX(locX[randomX]);
+               pic.setY(locY[randomY]);
 
 
+               handler.postDelayed(this, delayed);
 
-   void touch(View move){
-        move.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
+           }
+       }, delayed);
 
-                    case MotionEvent.ACTION_DOWN:
-                        initialX= motionEvent.getRawX();
-                        initialY=motionEvent.getRawY();
-
-                        offSetX= move.getX()- initialX;
-                        offSetY= move.getY()- initialY;
-
-                        return true;
-                    case MotionEvent.ACTION_MOVE:
-                        float newX= motionEvent.getRawX() + offSetX;
-                        float newY= motionEvent.getRawY() + offSetY;
-
-                        move.setX(newX);
-                        move.setY(newY);
-
-                        if(collideCheck(move, brave)){
-                            score++;
-                            hitDetect.setText(String.valueOf(score));
-
-                            if (score>=100){
-                                scoreText.setText("GG");
-                            }
-                        }
-
-
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        return  true;
-                    default: return false;
-                }
-            }
-        });
 
    }
+//
+//   void touch(View move){
+//
+//        move.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                switch (motionEvent.getAction()) {
+//
+//                    case MotionEvent.ACTION_DOWN:
+//                        initialX= motionEvent.getRawX();
+//                        initialY=motionEvent.getRawY();
+//
+//                        offSetX= move.getX()- initialX;
+//                        offSetY= move.getY()- initialY;
+//
+//                        return true;
+//                    case MotionEvent.ACTION_MOVE:
+//                        float newX= motionEvent.getRawX() + offSetX;
+//                        float newY= motionEvent.getRawY() + offSetY;
+//
+//                        move.setX(newX);
+//                        move.setY(newY);
+//
+//                        if(collideCheck(move, brave)){
+//                            score++;
+//                            hitDetect.setText(String.valueOf(score));
+//
+//                            if (score>=100){
+//                                scoreText.setText("GG");
+//                            }
+//                        }
+//
+//
+//                        return true;
+//                    case MotionEvent.ACTION_UP:
+//                        return  true;
+//                    default: return false;
+//                }
+//            }
+//        });
+//
+//   }
 
 
    boolean collideCheck(View v1, View v2){
@@ -254,40 +302,45 @@ public class MainActivity extends AppCompatActivity {
 
     void clicker(){
 
-        View gameArea = findViewById(R.id.rootLayout);
 
-        gameArea.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
+         View gameArea = findViewById(R.id.rootLayout);
 
-                float x = event.getX();
-                float y = event.getY();
+         gameArea.setOnTouchListener(new View.OnTouchListener() {
 
-                switch (event.getAction()) {
 
-                    case MotionEvent.ACTION_DOWN:
-                        slashView.start(x, y);
-                        break;
+             @Override
+             public boolean onTouch(View v, MotionEvent event) {
+                 if (over) {
+                     slashView.clear();   // remove slash
+                     return false;        // 🚨 STOP everything
+                 }
+                 float x = event.getX();
+                 float y = event.getY();
 
-                    case MotionEvent.ACTION_MOVE:
-                        slashView.addPoint(x, y);
+                 switch (event.getAction()) {
 
-                        checkSlash(chrome, x, y);
-                        checkSlash(edge, x, y);
-                        checkSlash(fireFox, x, y);
-                        checkSlash(brave, x, y);
-                        checkSlash(virus, x, y);
-                        break;
+                     case MotionEvent.ACTION_DOWN:
+                         slashView.start(x, y);
+                         break;
 
-                    case MotionEvent.ACTION_UP:
-                        slashView.clear(); // 👈 ADD THIS
-                        break;
-                }
+                     case MotionEvent.ACTION_MOVE:
+                         slashView.addPoint(x, y);
 
-                return true;
-            }
-        });
+                         checkSlash(chrome, x, y);
+                         checkSlash(edge, x, y);
+                         checkSlash(fireFox, x, y);
+                         checkSlash(brave, x, y);
+                         checkSlash(virus, x, y);
+                         break;
 
+                     case MotionEvent.ACTION_UP:
+                         slashView.clear(); // 👈 ADD THIS
+                         break;
+                 }
+
+                 return true;
+             }
+         });
 
 
 
@@ -313,6 +366,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if(life ==0){
                     over=true;
+                    slashView.clear();
                 }
             }
             scoreText.setText(String.valueOf(score));
@@ -348,27 +402,17 @@ public class MainActivity extends AppCompatActivity {
 
     void gameStop(){
 
-        gravity=0;
-        chromeVel=0;
-        edgeVel=0;
-        fireFoxVel=0;
-        braveVel=0;
-        virusVel=0;
-        ImageView[] browsers={chrome, edge, fireFox, brave, virus};
-
-        for(ImageView browser: browsers){
-            browser.setVisibility(GONE);
-        }
-
-        virus.setVisibility(GONE);
 
 
-
-
+        btnEnter.setVisibility(VISIBLE);
+        edtName.setVisibility(VISIBLE);
 
 
 
 
 
     }
+
+
+
 }

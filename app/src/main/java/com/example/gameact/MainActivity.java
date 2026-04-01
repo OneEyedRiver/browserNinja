@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     TextView hitDetect, scoreText, lifeDetect, txtLevel,txtCountdown;
     TableLayout tableRank;
     TextView txtLevelUp,  txtLevelUp1, txtLevelUp2, txtLevelUp3, txtLevelUp4;
-
+    RelativeLayout rootLayout;
 
     int level= 1;
 
@@ -124,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         txtLevelUp1 = findViewById(R.id.txtLevelUp1);
         txtLevelUp2 = findViewById(R.id.txtLevelUp2);
         txtLevelUp3 = findViewById(R.id.txtLevelUp3);
-
+         rootLayout = findViewById(R.id.rootLayout);
 
 
 
@@ -521,6 +522,8 @@ public class MainActivity extends AppCompatActivity {
                 launchBrowser(edge);
                 launchBrowser(fireFox);
                 launchBrowser(virus); // ✅ ADD THIS
+                rootLayout.setBackgroundResource(R.drawable.win7_bg);
+
 
             }
             else if(score ==40){
@@ -534,6 +537,7 @@ public class MainActivity extends AppCompatActivity {
                 launchBrowser(tor);
 
                 launchBrowser(virus1);
+                rootLayout.setBackgroundResource(R.drawable.win10_bg);
             }
             else if(score == 80){
                 level = 4;
@@ -543,7 +547,7 @@ public class MainActivity extends AppCompatActivity {
                 launchBrowser(explorer);
 
                 launchBrowser(safari);
-
+                rootLayout.setBackgroundResource(R.drawable.ubuntu_bg);
             }
 
             else if(score == 120){
@@ -555,7 +559,7 @@ public class MainActivity extends AppCompatActivity {
                 delayed=100;
                 delayed1=200;
 
-
+                rootLayout.setBackgroundResource(R.drawable.arch_bg);
                 launchBrowser(virus2);
 
 
@@ -636,6 +640,7 @@ public class MainActivity extends AppCompatActivity {
         delayed=400;
         delayed1=1000;
         slashView.clear();
+        rootLayout.setBackgroundResource(R.drawable.bg1);
 
 
     }
@@ -819,6 +824,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         bgMusic= MediaPlayer.create(this,R.raw.bgmusic);
+        bgMusic.setVolume(1.0f, 1.0f);
         sound3=soundPool.load(this,R.raw.sound3,1);
         sound2=soundPool.load(this,R.raw.sound2,1);
         sound1=soundPool.load(this,R.raw.sound1,1);

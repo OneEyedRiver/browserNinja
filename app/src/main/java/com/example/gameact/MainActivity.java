@@ -17,6 +17,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
 
          int life=10;
 
-    TextView hitDetect, scoreText, lifeDetect, txtLevel, txtRank,txtCountdown;
+    TextView hitDetect, scoreText, lifeDetect, txtLevel,txtCountdown;
+    TableLayout tableRank;
     TextView txtLevelUp,  txtLevelUp1, txtLevelUp2, txtLevelUp3, txtLevelUp4;
 
 
@@ -107,17 +110,22 @@ public class MainActivity extends AppCompatActivity {
         master=findViewById(R.id.master_img);
 
 
-        hitDetect=findViewById(R.id.hitDetect);
+
+
+
         lifeDetect=findViewById(R.id.lifeDetect);
         scoreText=findViewById(R.id.scoreText);
         txtLevel=findViewById(R.id.txtLevel);
-        txtRank=findViewById(R.id.txtRank);
+        tableRank = findViewById(R.id.tableRank);
+
         txtCountdown=findViewById(R.id.txtCountdown);
         txtLevel.setText("Level: " +  level);
 
         txtLevelUp1 = findViewById(R.id.txtLevelUp1);
         txtLevelUp2 = findViewById(R.id.txtLevelUp2);
         txtLevelUp3 = findViewById(R.id.txtLevelUp3);
+
+
 
 
 
@@ -130,8 +138,8 @@ public class MainActivity extends AppCompatActivity {
                 chromeVel, edgeVel, fireFoxVel, braveVel,  torVel, safariVel, operaVel, explorerVel, virusVel ,virusVel1, virusVel2
         };
 
-        hitDetect.setText("1");
-        lifeDetect.setText("3");
+
+        lifeDetect.setText("10");
 
         for(int i = 0; i < browsers.length; i++){
             if(browsers[i].getVisibility() == VISIBLE){
@@ -168,6 +176,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 over=true;
+                bgMusic.pause();
+                bgMusic.seekTo(0);
 
                 showCountdown();
             }
@@ -292,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
         if(browser.getY() > screenHeight){
             browser.setVisibility(GONE);
 
-            if(browser !=virus && browser !=virus1){
+            if(browser !=virus && browser !=virus1 && browser !=virus2){
                 life--;
                 soundPool.play(minus_1, 1, 1, 0, 0, 1);
                 showMaster(R.drawable.img_minus1,200);
@@ -507,7 +517,7 @@ public class MainActivity extends AppCompatActivity {
                 level = 2;
                 txtLevel.setText("Level: " +  level);
                 showLevelUp(level);
-                hitDetect.setText(String.valueOf(level));
+
                 launchBrowser(edge);
                 launchBrowser(fireFox);
                 launchBrowser(virus); // ✅ ADD THIS
@@ -517,19 +527,19 @@ public class MainActivity extends AppCompatActivity {
                 level = 3;
                 txtLevel.setText("Level: " +  level);
                 showLevelUp(level);
-                hitDetect.setText(String.valueOf(level));
+
                 delayed=200;
                 delayed1=500;
 
                 launchBrowser(tor);
-                launchBrowser(brave);
+
                 launchBrowser(virus1);
             }
             else if(score == 80){
                 level = 4;
                 txtLevel.setText("Level: " +  level);
                 showLevelUp(level);
-                hitDetect.setText(String.valueOf(level));
+
                 launchBrowser(explorer);
 
                 launchBrowser(safari);
@@ -540,12 +550,12 @@ public class MainActivity extends AppCompatActivity {
                 level = 5;
                 txtLevel.setText("Level: " +  level);
                 showLevelUp(level);
-                hitDetect.setText(String.valueOf(level));
+
 
                 delayed=100;
                 delayed1=200;
 
-                launchBrowser(opera);
+
                 launchBrowser(virus2);
 
 
@@ -587,23 +597,24 @@ public class MainActivity extends AppCompatActivity {
         btnRestart.setVisibility(VISIBLE);
         btnPause.setVisibility(INVISIBLE);
         btnRank.setVisibility(VISIBLE);
-        txtRank.setVisibility(VISIBLE);
+        tableRank.setVisibility(VISIBLE);
     }
 
     void pauseGame(){
 
         if(!isPaused){
             isPaused=true;
-            btnPause.setText("Resume");
+            btnPause.setText("RESUME");;
+
             btnRestart.setVisibility(VISIBLE);
             btnRank.setVisibility(VISIBLE);
-            txtRank.setVisibility(VISIBLE);
+            tableRank.setVisibility(VISIBLE);
             bgMusic.pause();
         }else{
-            btnPause.setText("Pause");
+            btnPause.setText("PAUSE");
             btnRestart.setVisibility(INVISIBLE);
             btnRank.setVisibility(INVISIBLE);
-            txtRank.setVisibility(INVISIBLE);
+            tableRank.setVisibility(INVISIBLE);
             showCountdownPause();
 
 
@@ -619,7 +630,7 @@ public class MainActivity extends AppCompatActivity {
 
         gravity= 0.5f;
         score=0;
-        life=3;
+        life=10;
 
         launchBrowser(chrome);
         delayed=400;
@@ -632,15 +643,14 @@ public class MainActivity extends AppCompatActivity {
     void resetText(){
         level=1;
         scoreText.setText("0");
-        lifeDetect.setText("3");
-        hitDetect.setText("1");
+        lifeDetect.setText("10");
         btnPause.setText("Pause");
         btnPause.setVisibility(VISIBLE);
         btnEnter.setVisibility(INVISIBLE);
         edtName.setVisibility(INVISIBLE);
         btnRestart.setVisibility(INVISIBLE);
         btnRank.setVisibility(INVISIBLE);
-        txtRank.setVisibility(INVISIBLE);
+        tableRank.setVisibility(INVISIBLE);
         txtLevel.setText("Level: " + level);
         for(int i = 0; i < browsers.length; i++){
             if(browsers[i].getVisibility() == VISIBLE){
@@ -653,27 +663,53 @@ public class MainActivity extends AppCompatActivity {
         btnPlay.setVisibility(INVISIBLE);
 
         btnRank.setVisibility(INVISIBLE);
-        txtRank.setVisibility(INVISIBLE);
+        tableRank.setVisibility(INVISIBLE);
         showCountdown();
 
     }
 
     void showRank(){
-        Cursor cursor= db.getAllData();
-        StringBuffer buffer= new StringBuffer();
+
+        tableRank.setVisibility(VISIBLE);
+
+        Cursor cursor = db.getAllData();
+
+        tableRank.removeViews(1, Math.max(0, tableRank.getChildCount() - 1));
+
+        int rank = 1;
 
         while(cursor.moveToNext()){
-            buffer.append("ID:")
-                    .append(cursor.getString(0))
-                    .append("Name")
-                    .append(cursor.getString(1))
-                    .append("Score")
-                    .append(cursor.getString(2))
-                    .append("\n");
+
+            TableRow row = new TableRow(this);
+
+            TextView txtRank = new TextView(this);
+            TextView txtName = new TextView(this);
+            TextView txtScore = new TextView(this);
+
+            txtRank.setText(String.valueOf(rank));
+            txtName.setText(cursor.getString(1));
+            txtScore.setText(cursor.getString(2));
+
+            txtRank.setPadding(6,6,6,6);
+            txtName.setPadding(6,6,6,6);
+            txtScore.setPadding(6,6,6,6);
+
+            txtRank.setTextColor(getResources().getColor(android.R.color.white));
+            txtName.setTextColor(getResources().getColor(android.R.color.white));
+            txtScore.setTextColor(getResources().getColor(android.R.color.white));
+
+            row.addView(txtRank);
+            row.addView(txtName);
+            row.addView(txtScore);
+
+            tableRank.addView(row);
+
+            rank++;
         }
-        txtRank.setText(buffer.toString());
     }
+
     void showCountdown() {
+
         bgMusic.setLooping(true);
         bgMusic.start();
         master.setVisibility(VISIBLE);
@@ -741,13 +777,23 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 if (count[0] > 0) {
                     txtCountdown.setText(String.valueOf(count[0]));
-                    if(count[0] == 3) soundPool.play(sound3, 1, 1, 0, 0, 1);
-                    if(count[0] == 2) soundPool.play(sound2, 1, 1, 0, 0, 1);
-                    if(count[0] == 1) soundPool.play(sound1, 1, 1, 0, 0, 1);
+                    if(count[0] == 3){
+                        soundPool.play(sound3, 1, 1, 0, 0, 1);
+                        master.setImageResource(R.drawable.img_3);
+                    }
+                    if(count[0] == 2){
+                        soundPool.play(sound2, 1, 1, 0, 0, 1);
+                        master.setImageResource(R.drawable.img_2);
+                    }
+                    if(count[0] == 1){
+                        soundPool.play(sound1, 1, 1, 0, 0, 1);
+                        master.setImageResource(R.drawable.img_1);
+                    }
                     count[0]--;
                     countdownHandler.postDelayed(this, 1000); // wait 1 second
                 } else {
                     txtCountdown.setText("GO!");
+                    showMaster(R.drawable.img_go,1000);
                     soundPool.play(soundGo, 1, 1, 0, 0, 1);
                     countdownHandler.postDelayed(() -> {
                         txtCountdown.setVisibility(GONE);

@@ -141,84 +141,11 @@
         android:src="@drawable/virus3"
         android:visibility="gone" />
 
-    <!-- ══════════════════════════════════════
-         HUD: Score (top-right)
-    ══════════════════════════════════════ -->
-
-    <!-- HUD: Hit indicator (top-left, small) -->
-    <TextView
-        android:id="@+id/hitDetect"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No Hit"
-        android:textSize="11sp"
-        android:textStyle="bold"
-        android:fontFamily="@font/orbitron_bold"
-        android:textColor="#00FFCC"
-        android:shadowColor="#00FFB2"
-        android:shadowDx="0"
-        android:shadowDy="0"
-        android:shadowRadius="10"
-        android:letterSpacing="0.08"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="10dp"
-        android:visibility="gone" />
-    <!-- ══════════════════════════════════════
-             HUD PILL: ❤ LIVES  (top-left)
-        ══════════════════════════════════════ -->
-    <LinearLayout
-        android:id="@+id/hudScoreCard"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:background="@drawable/hud_life_bg"
-        android:paddingStart="12dp"
-        android:paddingEnd="16dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="52dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="❤"
-            android:textSize="15sp"
-            android:layout_marginEnd="6dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="HP"
-            android:textSize="9sp"
-            android:textStyle="bold"
-            android:fontFamily="@font/orbitron_bold"
-            android:textColor="#99FF8888"
-            android:letterSpacing="0.10"
-            android:layout_marginEnd="6dp" />
-
-        <TextView
-            android:id="@+id/scoreText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="3"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:fontFamily="@font/orbitron_bold"
-            android:textColor="#FF4444"
-            android:shadowColor="#FF0000"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="12" />
-
-    </LinearLayout>
 
     <!-- ══════════════════════════════════════
          HUD PILL: ❤ LIVES  (top-left)
     ══════════════════════════════════════ -->
+
     <LinearLayout
         android:id="@+id/hudLifeCard"
         android:layout_width="wrap_content"
@@ -232,7 +159,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="12dp"
         android:layout_marginTop="52dp"
-        android:layout_below="@id/hudScoreCard">
+
+        >
 
         <TextView
             android:layout_width="wrap_content"
@@ -256,7 +184,7 @@
             android:id="@+id/lifeDetect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="3"
+            android:text="10"
             android:textSize="20sp"
             android:textStyle="bold"
             android:fontFamily="@font/orbitron_bold"
@@ -295,7 +223,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="LVL"
+
             android:textSize="9sp"
             android:textStyle="bold"
             android:fontFamily="@font/orbitron_bold"
@@ -316,6 +244,55 @@
             android:shadowDx="0"
             android:shadowDy="0"
             android:shadowRadius="12" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/hudScoreCard"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="145dp"
+        android:background="@drawable/hud_score_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="12dp"
+        android:paddingEnd="16dp"
+
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginEnd="6dp"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:fontFamily="@font/orbitron_bold"
+            android:letterSpacing="0.10"
+            android:text="Score"
+            android:textColor="#99FF8888"
+            android:textSize="9sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/scoreText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/orbitron_bold"
+            android:shadowColor="#FF0000"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="12"
+            android:text="0"
+            android:textColor="#FF4444"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -353,7 +330,7 @@
         android:background="@drawable/btn_primary_bg"
         android:layout_below="@id/edtName"
         android:layout_centerInParent="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:visibility="invisible"
         android:stateListAnimator="@null"
         android:elevation="6dp" />
@@ -366,9 +343,9 @@
         android:textStyle="bold"
         android:fontFamily="@font/orbitron_bold"
         android:text="▶  PLAY"
-        android:textColor="#0A0A1A"
+        android:textColor="#9C27B0"
         android:letterSpacing="0.12"
-        android:background="@drawable/btn_primary_bg"
+        android:background="@drawable/hud_level_bg"
         android:layout_below="@id/edtName"
         android:layout_centerInParent="true"
         android:layout_marginTop="10dp"
@@ -410,36 +387,58 @@
         android:stateListAnimator="@null"
         android:elevation="4dp" />
 
-    <TextView
-        android:id="@+id/txtRank"
-        android:layout_width="220dp"
+    <TableLayout
+        android:id="@+id/tableRank"
+        android:layout_width="260dp"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:fontFamily="@font/orbitron_bold"
-        android:textColor="#CCFFFFFF"
-        android:letterSpacing="0.05"
-        android:lineSpacingExtra="4dp"
         android:layout_below="@id/btnRestart"
         android:layout_centerInParent="true"
         android:layout_marginTop="12dp"
-        android:gravity="center" />
+        android:stretchColumns="*"
+        android:visibility="gone"
+        android:background="@drawable/hud_score_bg"
+        android:padding="8dp">
+
+        <TableRow>
+
+            <TextView
+                android:text="Rank"
+                android:textStyle="bold"
+                android:textColor="#FFD700"
+                android:padding="4dp"/>
+
+            <TextView
+                android:text="Name"
+                android:textStyle="bold"
+                android:textColor="#FFD700"
+                android:padding="4dp"/>
+
+            <TextView
+                android:text="Score"
+                android:textStyle="bold"
+                android:textColor="#FFD700"
+                android:padding="4dp"/>
+
+        </TableRow>
+
+    </TableLayout>
 
     <!-- ── Pause button (top-right, below score) ── -->
     <Button
         android:id="@+id/btnPause"
-        android:layout_width="80dp"
-        android:layout_height="36dp"
-        android:textSize="9sp"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:textSize="10sp"
         android:textStyle="bold"
         android:fontFamily="@font/orbitron_bold"
-        android:text="⏸ PAUSE"
-        android:textColor="#FFFFFF"
-        android:letterSpacing="0.06"
-        android:background="@drawable/btn_hud_bg"
+        android:text="⏸  PAUSE"
+        android:textColor="#CCFFFFFF"
+        android:letterSpacing="0.10"
+        android:background="@drawable/btn_ghost_bg"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="12dp"
         android:visibility="invisible"
         android:stateListAnimator="@null"
         android:elevation="4dp" />

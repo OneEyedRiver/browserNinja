@@ -33,6 +33,7 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
+    //Objects
         ImageView chrome, edge, fireFox, brave, explorer, tor, safari, opera, virus, virus1, virus2;
 
         ImageView master;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         Button btnEnter, btnPlay, btnPause, btnRestart, btnRank;
         EditText edtName;
 
-        private boolean isPaused= false;
+
 
         int delayed1=1000;
     int delayed2=200;
@@ -54,22 +55,28 @@ public class MainActivity extends AppCompatActivity {
 
 
         float initialX, initialY, offSetX, offSetY;
+        //Physics
         float chromeVel, edgeVel, fireFoxVel, braveVel, explorerVel, torVel, safariVel, operaVel ,virusVel, virusVel1, virusVel2;
         float gravity= 0.5f;
         int screenHeight=2500;
-        int score=0;
 
+
+        //Game State
+        int score=0;
          int life=10;
+         int level= 1;
+          private boolean isPaused= false;
+         boolean over=false;
 
     TextView hitDetect, scoreText, lifeDetect, txtLevel,txtCountdown;
     TableLayout tableRank;
     TextView txtLevelUp,  txtLevelUp1, txtLevelUp2, txtLevelUp3, txtLevelUp4;
     RelativeLayout rootLayout;
 
-    int level= 1;
+
 
         boolean touch= false;
-        boolean over=false;
+
         boolean play=false;
          DatabaseHelper db;
     ImageView[] browsers;
@@ -142,6 +149,8 @@ public class MainActivity extends AppCompatActivity {
 
         lifeDetect.setText("10");
 
+        //Initial Launch
+        //Only visible objects are launched at start.
         for(int i = 0; i < browsers.length; i++){
             if(browsers[i].getVisibility() == VISIBLE){
                 launchBrowser(browsers[i]);
@@ -187,11 +196,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void launchBrowser(View browser){
+        //launchBrowser() — Spawning Objects
+        //Starts at bottom of screen
+        //Random horizontal position
         int randomX= random.nextInt(900);
         browser.setX(randomX);
         browser.setY(screenHeight);
 
-
+        //Velocity
+        //Negative = moves upward
+        //Random speed
         float startingVelocity= - 35 - random.nextInt(15);
 
         if(browser == chrome) {
@@ -251,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    void updateBrowser(ImageView browser){
+    void updateBrowser(ImageView browser){//Physics Engine
 
         if(over)  {
             btnEnter.setVisibility(VISIBLE);
@@ -341,7 +355,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
-                handler.postDelayed(this, 30);
+                handler.postDelayed(this, 30);//Runs every 30ms (~33 FPS)
             }
         },30);
     }

@@ -4,6 +4,8 @@ import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.database.Cursor;
 import android.graphics.Rect;
 import android.media.AudioAttributes;
@@ -11,7 +13,9 @@ import android.media.Image;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -34,18 +38,22 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
 
     //Objects
-        ImageView chrome, edge, fireFox, brave, explorer, tor, safari, opera, virus, virus1, virus2;
+        ImageView chrome, edge, fireFox, brave, explorer, tor, safari, opera, virus, virus1, virus2, flip, slow;
 
         ImageView master;
         Handler handler= new Handler();
         Random random= new Random();
 
         int delayed=400;
+    int fps=30;
 
         SlashView slashView;
 
         Button btnEnter, btnPlay, btnPause, btnRestart, btnRank;
         EditText edtName;
+
+        boolean flipz= false;
+        boolean slowMo= false;
 
 
 
@@ -56,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         float initialX, initialY, offSetX, offSetY;
         //Physics
-        float chromeVel, edgeVel, fireFoxVel, braveVel, explorerVel, torVel, safariVel, operaVel ,virusVel, virusVel1, virusVel2;
+        float chromeVel, edgeVel, fireFoxVel, braveVel, explorerVel, torVel, safariVel, operaVel ,virusVel, virusVel1, virusVel2,flipVel, slowVel;
         float gravity= 0.5f;
         int screenHeight=2500;
 
@@ -115,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
         virus=findViewById(R.id.virusImg);
         virus1=findViewById(R.id.virusImg1);
         virus2=findViewById(R.id.virusImg2);
+        flip=findViewById(R.id.flipImg);
+        slow=findViewById(R.id.slowImg);
         master=findViewById(R.id.master_img);
 
 
@@ -140,10 +150,10 @@ public class MainActivity extends AppCompatActivity {
 
         soundInit();
         browsers = new ImageView[]{
-                chrome, edge, fireFox, brave,  tor, safari, opera, explorer,virus,  virus1,virus2
+                chrome, edge, fireFox, brave,  tor, safari, opera, explorer,virus,  virus1,virus2, flip, slow
         };
         velocities = new float[]{
-                chromeVel, edgeVel, fireFoxVel, braveVel,  torVel, safariVel, operaVel, explorerVel, virusVel ,virusVel1, virusVel2
+                chromeVel, edgeVel, fireFoxVel, braveVel,  torVel, safariVel, operaVel, explorerVel, virusVel ,virusVel1, virusVel2, flipVel
         };
 
 
@@ -253,6 +263,17 @@ public class MainActivity extends AppCompatActivity {
             virus2.setVisibility(VISIBLE);
         }
 
+        if(browser == flip) {
+            flipVel = startingVelocity;
+            flip.setVisibility(VISIBLE);
+        }
+
+        if(browser == slow) {
+            slowVel = startingVelocity;
+            slow.setVisibility(VISIBLE);
+        }
+
+
 //        for(int i = 0; i < browsers.length; i++){
 //            if(browser == browsers[i]) {
 //                velocities[i] = startingVelocity;
@@ -291,6 +312,8 @@ public class MainActivity extends AppCompatActivity {
         if(browser == virus) velocity = virusVel;
         if(browser == virus1) velocity = virusVel1;
         if(browser == virus2) velocity = virusVel2;
+        if(browser == flip) velocity = flipVel;
+        if(browser == slow) velocity = slowVel;
 
 
 
@@ -311,17 +334,25 @@ public class MainActivity extends AppCompatActivity {
         if(browser == virus) virusVel = velocity;
         if(browser == virus1) virusVel1 = velocity;
         if(browser == virus2) virusVel2 = velocity;
+        if(browser == flip) flipVel = velocity;
+        if(browser == slow) slowVel = velocity;
 
 
 
         if(browser.getY() > screenHeight){
             browser.setVisibility(GONE);
 
-            if(browser !=virus && browser !=virus1 && browser !=virus2){
-                life--;
-                soundPool.play(minus_1, 1, 1, 0, 0, 1);
-                showMaster(R.drawable.img_minus1,200);
-                shakeScreen();
+            if(browser !=virus && browser !=virus1 && browser !=virus2 && browser != flip && browser != slow){
+
+                if(!flipz) {
+                    life--;
+                    soundPool.play(minus_1, 1, 1, 0, 0, 1);
+                    showMaster(R.drawable.img_minus1, 200);
+                    shakeScreen();
+                }else{
+                    life++;
+                }
+
 
             }
 
@@ -355,9 +386,9 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
-                handler.postDelayed(this, 30);//Runs every 30ms (~33 FPS)
+                handler.postDelayed(this, fps);//Runs every 30ms (~33 FPS)
             }
-        },30);
+        },fps);
     }
    void moveImageRandomly(ImageView pic) {
        handler.postDelayed(new Runnable() {
@@ -492,16 +523,70 @@ public class MainActivity extends AppCompatActivity {
 
         if(r.contains((int)x,(int)y)){
 
-            if(fruit != virus && fruit != virus1 && fruit != virus2) {
-                score++;
-                int randSound= random.nextInt(2);
-                int[] hitSound={soundHit, soundNice};
 
-                soundPool.play(hitSound[randSound], 1, 1, 0, 0, 1);
-                if (randSound==0){
-                    showMaster(R.drawable.img_hit,200);
+
+            if(fruit != virus && fruit != virus1 && fruit != virus2 ) {
+
+                if(!flipz) {
+                    if(fruit != flip && fruit != slow) {
+                        score++;
+                        int randSound = random.nextInt(2);
+                        int[] hitSound = {soundHit, soundNice};
+
+                        soundPool.play(hitSound[randSound], 1, 1, 0, 0, 1);
+                        if (randSound == 0) {
+                            showMaster(R.drawable.img_hit, 200);
+                        } else {
+                            showMaster(R.drawable.img_nice, 200);
+                        }
+                    }else{
+                        if(fruit == flip){
+                            flipz=true;
+                            flip.setVisibility(GONE);
+                            slow.setVisibility(GONE);
+                            new CountDownTimer(10000, 1000) {
+                                public void onTick(long millisUntilFinished) {
+                                    Log.d(TAG, "Seconds remaining Opposite: " + millisUntilFinished / 1000);
+                                    flip.setVisibility(GONE);
+                                    slow.setVisibility(GONE);
+
+
+                                }
+                                public void onFinish() {
+                                    Log.d(TAG,"Done!");
+                                    flipz=false;
+                                    flip.setVisibility(VISIBLE);
+                                    slow.setVisibility(VISIBLE);
+
+                                }
+                            }.start();
+
+                        }
+                        if(fruit == slow){
+                            fps = 100;
+                            flip.setVisibility(GONE);
+                            slow.setVisibility(GONE);
+                            new CountDownTimer(10000, 1000) {
+                                public void onTick(long millisUntilFinished) {
+                                    Log.d(TAG, "Seconds remaining for Slow Motion: " + millisUntilFinished / 1000);
+                                    flip.setVisibility(GONE);
+                                    slow.setVisibility(GONE);
+
+                                }
+                                public void onFinish() {
+                                    Log.d(TAG,"Done!");
+                                    fps = 30;
+                                    flip.setVisibility(VISIBLE);
+                                    slow.setVisibility(VISIBLE);
+
+
+                                }
+                            }.start();
+                        }
+                    }
+
                 }else{
-                    showMaster(R.drawable.img_nice,200);
+                    score--;
                 }
 
             }else{
@@ -514,6 +599,8 @@ public class MainActivity extends AppCompatActivity {
                     life--;
                     soundPool.play(minus_1, 1, 1, 0, 0, 1);
                     showMaster(R.drawable.img_minus2,200);
+
+
                 }
 
                 lifeDetect.setText(String.valueOf(life));
@@ -536,6 +623,8 @@ public class MainActivity extends AppCompatActivity {
                 launchBrowser(edge);
                 launchBrowser(fireFox);
                 launchBrowser(virus); // ✅ ADD THIS
+                launchBrowser(flip);
+                launchBrowser(slow);
                 rootLayout.setBackgroundResource(R.drawable.win7_bg);
 
 

@@ -140,6 +140,18 @@
         android:layout_height="106dp"
         android:src="@drawable/virus3"
         android:visibility="gone" />
+    <ImageView
+        android:id="@+id/flipImg"
+        android:layout_width="96dp"
+        android:layout_height="106dp"
+        android:src="@drawable/flip"
+        android:visibility="gone" />
+    <ImageView
+        android:id="@+id/slowImg"
+        android:layout_width="96dp"
+        android:layout_height="106dp"
+        android:src="@drawable/slow"
+        android:visibility="gone" />
 
 
     <!-- ══════════════════════════════════════

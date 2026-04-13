@@ -4,6 +4,7 @@ import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Rect;
 import android.media.AudioAttributes;
@@ -59,14 +60,15 @@ public class MainActivity extends AppCompatActivity {
         float chromeVel, edgeVel, fireFoxVel, braveVel, explorerVel, torVel, safariVel, operaVel ,virusVel, virusVel1, virusVel2;
         float gravity= 0.5f;
         int screenHeight=2500;
+   // int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
 
         //Game State
         int score=0;
-         int life=10;
-         int level= 1;
-          private boolean isPaused= false;
-         boolean over=false;
+        int life=10;
+        int level= 1;
+        boolean isPaused= false;
+        boolean over=false;
 
     TextView hitDetect, scoreText, lifeDetect, txtLevel,txtCountdown;
     TableLayout tableRank;
@@ -295,8 +297,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         browser.setY(browser.getY() + velocity);
-
         velocity +=gravity;
+
         if(browser == chrome) chromeVel = velocity;
         if(browser == edge) edgeVel = velocity;
         if(browser == fireFox) fireFoxVel= velocity;
@@ -313,7 +315,7 @@ public class MainActivity extends AppCompatActivity {
         if(browser == virus2) virusVel2 = velocity;
 
 
-
+//fallofScreen
         if(browser.getY() > screenHeight){
             browser.setVisibility(GONE);
 
@@ -461,7 +463,7 @@ public class MainActivity extends AppCompatActivity {
                      case MotionEvent.ACTION_MOVE:
                          slashView.addPoint(x, y);
 
-
+                        //checkSlash
                          for(int i = 0; i < browsers.length; i++){
                              if(browsers[i].getVisibility() == VISIBLE){
                                  checkSlash(browsers[i], x, y);
@@ -492,6 +494,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(r.contains((int)x,(int)y)){
 
+            //Normal Browsers
             if(fruit != virus && fruit != virus1 && fruit != virus2) {
                 score++;
                 int randSound= random.nextInt(2);
@@ -504,7 +507,9 @@ public class MainActivity extends AppCompatActivity {
                     showMaster(R.drawable.img_nice,200);
                 }
 
-            }else{
+            }
+            //Virus
+            else{
                 shakeScreen();
                 if(fruit == virus2){
                     life -= 2;
